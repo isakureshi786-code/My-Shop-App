@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="mr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate, max-age=0" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="theme-color" content="#ba4305" />
+    <link rel="manifest" href="/manifest.json" />
+    <title>Mehkar Ration Shop AePDS Portal</title>
+    <meta name="description" content="सार्वजनिक वितरण प्रणाली (AePDS) - बुलढाणा (मेहकर) थेट ई-पॉस डेटा व रेशन दुकाने लाईव्ह ट्रॅकर" />
+    <meta property="og:title" content="Mehkar Ration Shop AePDS Portal" />
+    <meta property="og:description" content="सार्वजनिक वितरण प्रणाली (AePDS) - बुलढाणा (मेहकर) थेट ई-पॉस डेटा व रेशन दुकाने लाईव्ह ट्रॅकर" />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-slate-50 text-slate-900 font-sans antialiased min-h-screen">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+      // Service Worker Registration for PWA & Offline Support
+      if ('serviceWorker' in navigator) {
+        // In AI Studio preview / iframe environment, clean up service worker to prevent cross-origin iframe fetch errors
+        const isPreviewIframe = window.self !== window.top;
+        if (isPreviewIframe) {
+          navigator.serviceWorker.getRegistrations().then((registrations) => {
+            for (const registration of registrations) {
+              registration.unregister().catch(() => {});
+            }
+          }).catch(() => {});
+        } else {
+          // Direct browser visits / PWA / mobile standalone mode
+          window.addEventListener('load', () => {
+            navigator.serviceWorker.register('/sw.js', { scope: '/' })
+              .then((reg) => {
+                if (reg) {
+                  // Safely call update with error catch
+                  reg.update().catch(() => {});
+                  reg.onupdatefound = () => {
+                    const installing = reg.installing;
+                    if (installing) {
+                      installing.onstatechange = () => {
+                        if (installing.state === 'installed' && navigator.serviceWorker.controller) {
+                          console.log('[SW] New version available, reloading...');
+                          window.location.reload();
+                        }
+                      };
+                    }
+                  };
+                }
+              })
+              .catch(() => {});
+          });
+        }
+      }
+    </script>
+  </body>
+</html>
+
